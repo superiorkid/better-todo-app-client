@@ -76,8 +76,7 @@ const FormInputTodo: FC = () => {
                                     <Stack spacing={"4"}>
                                         <FormControl isInvalid={Boolean(errors.title)}>
                                             <FormLabel htmlFor={"title"}>Title</FormLabel>
-                                            <Input type={"text"} id={"title"}
-                                                   placeholder={"input title"} {...register("title")} />
+                                            <Input type={"text"} placeholder={"input title"} {...register("title")} />
                                             <FormErrorMessage>
                                                 {errors.title && errors.title.message}
                                             </FormErrorMessage>

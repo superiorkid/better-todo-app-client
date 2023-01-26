@@ -9,13 +9,13 @@ import {
     Stack,
     FormControl,
     FormLabel,
-    Input, Button, FormErrorMessage, InputGroup, InputRightElement, Center, useToast
+    Input, Button, FormErrorMessage, InputGroup, InputRightElement, Center, useToast, CardFooter, Text, Link
 } from "@chakra-ui/react";
 import {useForm, SubmitHandler, UseFormReturn} from "react-hook-form";
 import * as Yup from "yup"
 import {yupResolver} from "@hookform/resolvers/yup";
 import axios from 'axios'
-import {useNavigate} from "react-router-dom";
+import {useNavigate, Link as RRDLink} from "react-router-dom";
 
 
 type LoginInputs = {
@@ -124,6 +124,10 @@ const Login: FC = () => {
                                     </Stack>
                                 </form>
                             </CardBody>
+                            <CardFooter>
+                                <Text as="span">Don't have an account? <Link as={RRDLink} to="/register"
+                                                                             color="blue">Register</Link></Text>
+                            </CardFooter>
                         </Card>
                     </Box>
                 </Container>

@@ -10,18 +10,19 @@ import {
     Spacer,
     Text, Tooltip, useToast,
     VStack,
+    LinkBox,
+    LinkOverlay
 } from "@chakra-ui/react";
 import {CheckIcon, DeleteIcon} from "@chakra-ui/icons";
 import DisplayTodo from "../DisplayTodo";
 import axios from "axios";
 import * as Yup from 'yup'
 import {yupResolver} from "@hookform/resolvers/yup";
+import {Link as RRDLink} from "react-router-dom";
 
 type Props = {
     todo: object
 }
-
-const schema = Yup.object
 
 
 const DisplayTodoCard: FC = ({todo}: Props) => {
@@ -69,12 +70,16 @@ const DisplayTodoCard: FC = ({todo}: Props) => {
     }
 
     return (
-        <Box p={"3"} borderWidth={"1px"} w={"full"}>
+        <LinkBox as="div" p="4px" w="full">
             <Card bg={todo.is_completed ? "green.200" : "orange"}>
                 <CardBody color={"white"}>
                     <Flex>
                         <Box>
-                            <Heading as={"h1"} size={"md"}>{todo.title}</Heading>
+                            <Heading as={"h1"} size={"md"}>
+                                <LinkOverlay as={RRDLink} to={`/todo/${todo._id}`}>
+                                    {todo.title}
+                                </LinkOverlay>
+                            </Heading>
                             <Text mt={"15px"}>
                                 {todo.todo}
                             </Text>
@@ -104,7 +109,7 @@ const DisplayTodoCard: FC = ({todo}: Props) => {
                     </Flex>
                 </CardBody>
             </Card>
-        </Box>
+        </LinkBox>
     )
 }
 

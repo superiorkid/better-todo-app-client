@@ -1,5 +1,16 @@
 import {FC, useEffect, useState} from "react";
-import {Heading, Tabs, TabList, Tab, TabPanels, TabPanel, useAccordionStyles, HStack, VStack} from "@chakra-ui/react";
+import {
+    Heading,
+    Tabs,
+    TabList,
+    Tab,
+    TabPanels,
+    TabPanel,
+    useAccordionStyles,
+    HStack,
+    VStack,
+    Box, Alert, AlertIcon
+} from "@chakra-ui/react";
 import DisplayTodoCard from "./DisplayTodoCard/DisplayTodoCard";
 import axios, {AxiosRequestHeaders} from "axios";
 
@@ -42,16 +53,24 @@ const DisplayTodo: FC = () => {
         <Tabs isFitted variant='enclosed'>
             <TabList mb='1em'>
                 <Tab>All</Tab>
-                <Tab>Complete</Tab>
-                <Tab>Incomplete</Tab>
+                <Tab isDisabled={todos.length === 0}>Complete</Tab>
+                <Tab isDisabled={todos.length === 0}>Incomplete</Tab>
             </TabList>
             <TabPanels>
                 <TabPanel>
-                    <VStack spacer={"10px"}>
-                        {todos.map((todo, index) => (
-                            <DisplayTodoCard key={index} todo={todo}/>
-                        ))}
-                    </VStack>
+                    {todos.length === 0 ? (
+                        <Alert status='error'>
+                            <AlertIcon/>
+                            Your todo is empty
+                        </Alert>
+
+                    ) : (
+                        <VStack spacer={"10px"}>
+                            {todos.map((todo, index) => (
+                                <DisplayTodoCard key={index} todo={todo}/>
+                            ))}
+                        </VStack>
+                    )}
                 </TabPanel>
                 <TabPanel>
                     {todos.filter((predicate) => predicate.is_completed === true).map((todo, index) => (

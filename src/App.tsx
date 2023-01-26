@@ -6,6 +6,7 @@ import Homepage from "./pages/Homepage/Homepage";
 import UserInfo from "./pages/UserInfo/UserInfo";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import PublicRoute from "./utils/PublicRoute";
+import DetailTodo from "./pages/DetailTodo/DetailTodo";
 
 const App: FC = () => {
     return (
@@ -16,7 +17,12 @@ const App: FC = () => {
                         <Homepage/>
                     </ProtectedRoute>
                 }/>
-                <Route path={"/user-info"} element={
+                <Route path={"/todo/:id"} element={
+                    <ProtectedRoute>
+                        <DetailTodo/>
+                    </ProtectedRoute>
+                }/>
+                <Route path={"/user/info"} element={
                     <ProtectedRoute>
                         <UserInfo/>
                     </ProtectedRoute>

@@ -4,19 +4,20 @@ import {
     Card,
     CardBody,
     CardHeader,
+    CardFooter,
     Center,
     Container,
     FormControl, FormErrorMessage,
     FormLabel,
     Heading, Input, InputGroup, InputRightElement,
     Stack,
-    useToast
+    useToast, Text, Link
 } from "@chakra-ui/react";
 import {SubmitHandler, useForm} from "react-hook-form";
 import * as Yup from 'yup'
 import {yupResolver} from "@hookform/resolvers/yup";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import {Link as RRDLink, useNavigate} from "react-router-dom";
 
 
 const schema = Yup.object().shape({
@@ -153,6 +154,10 @@ const Register: FC = () => {
                                     </Stack>
                                 </form>
                             </CardBody>
+                            <CardFooter>
+                                <Text as="span">Have an account? <Link as={RRDLink} to='/login'
+                                                                       color="blue">Login</Link></Text>
+                            </CardFooter>
                         </Card>
                     </Box>
                 </Container>
