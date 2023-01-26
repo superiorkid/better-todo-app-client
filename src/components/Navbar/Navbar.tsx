@@ -1,16 +1,13 @@
 import {FC} from "react";
+import {Box, Button, ButtonGroup, Center, Container, Flex, Heading, Spacer, Text} from "@chakra-ui/react";
 import {Link} from "react-router-dom";
 
 const Navbar: FC = () => {
     return (
         <>
-            <nav>
-                <ul>
-                    <li>
-                        <Link to={'/login'}>Login</Link>
-                    </li>
-                </ul>
-            </nav>
+            <Center h={"150px"} bg={"teal.200"}>
+                <Heading color={"white"}>MERN TODO APP</Heading>
+            </Center>
         </>
     )
 }

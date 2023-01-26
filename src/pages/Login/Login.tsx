@@ -9,11 +9,13 @@ import {
     Stack,
     FormControl,
     FormLabel,
-    Input, Button, FormErrorMessage, InputGroup, InputRightElement, Center
+    Input, Button, FormErrorMessage, InputGroup, InputRightElement, Center, useToast
 } from "@chakra-ui/react";
 import {useForm, SubmitHandler, UseFormReturn} from "react-hook-form";
-import * as yup from "yup"
+import * as Yup from "yup"
 import {yupResolver} from "@hookform/resolvers/yup";
+import axios from 'axios'
+import {useNavigate} from "react-router-dom";
 
 
 type LoginInputs = {
@@ -21,24 +23,60 @@ type LoginInputs = {
     password: string
 }
 
+type loginUserResponse = {
+    code: number,
+    status: string,
+    message: string,
+    data: object
+}
 
-const schema = yup.object().shape({
-    email: yup.string().email().required(),
-    password: yup.string().min(5).required()
+const schema = Yup.object().shape({
+    email: Yup.string().email().required(),
+    password: Yup.string().min(5).required()
 })
 
 
 const Login: FC = () => {
+    const toast = useToast()
+    const navigate = useNavigate()
     const {
         register,
         handleSubmit,
         formState: {errors, isSubmitting},
-        reset
     } = useForm<LoginInputs>({resolver: yupResolver(schema)})
     const [showPassword, setShowPassword] = useState<boolean>(false)
-    const onSubmit: SubmitHandler<LoginInputs> = data => {
-        console.log(data)
-        reset()
+    const onSubmitHandler: SubmitHandler<LoginInputs> = async (data) => {
+        await axios
+            .post<loginUserResponse>("http://localhost:5000/user/login", data)
+            .then((res) => {
+                localStorage.setItem("token", res.data.data.token)
+                toast({
+                    title: res.data.message,
+                    position: "top",
+                    isClosable: true,
+                    status: "success"
+                })
+                navigate('/')
+            })
+            .catch((err) => {
+                if (err.response.data.code === 404) {
+                    toast({
+                        title: err.response.data.message,
+                        position: "top",
+                        isClosable: true,
+                        status: "error"
+                    })
+                } else if (err.response.data.code === 401) {
+                    toast({
+                        title: err.response.data.message,
+                        position: "top",
+                        isClosable: true,
+                        status: "error"
+                    })
+                } else {
+                    console.log(err)
+                }
+            })
     }
     const handleShowPassword = () => setShowPassword(!showPassword)
 
@@ -54,7 +92,7 @@ const Login: FC = () => {
                                 </Center>
                             </CardHeader>
                             <CardBody>
-                                <form onSubmit={handleSubmit(onSubmit)}>
+                                <form onSubmit={handleSubmit(onSubmitHandler)}>
                                     <Stack spacing={"4"}>
                                         <FormControl isInvalid={Boolean(errors.email)} isRequired>
                                             <FormLabel htmlFor={"email"}>E-mail</FormLabel>

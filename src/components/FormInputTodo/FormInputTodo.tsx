@@ -1,20 +1,93 @@
 import {FC} from "react";
+import {useForm, SubmitHandler} from "react-hook-form";
+import {
+    Box,
+    Button,
+    Container,
+    FormControl,
+    FormLabel,
+    Input,
+    Stack,
+    Heading,
+    CardHeader,
+    CardBody, Card, Center, Textarea
+} from "@chakra-ui/react";
+import axios, {AxiosRequestHeaders} from "axios";
+import {useToast} from "@chakra-ui/react";
+
+type Inputs = {
+    title: string,
+    todo: string
+}
 
 const FormInputTodo: FC = () => {
+    const toast = useToast()
+    const {register, handleSubmit, formState: {errors, isSubmitting}} = useForm()
+    const todoHandleSubmit: SubmitHandler<Inputs> = async (value) => {
+        try {
+            await axios.post('http://localhost:5000/todos/', value, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                } as AxiosRequestHeaders
+            }).then((res) => {
+                console.log(res.data)
+                toast({
+                    title: res.data.message,
+                    position: "top",
+                    isClosable: true,
+                    status: "success",
+                    duration: 5000
+                })
+            })
+        } catch (err) {
+            console.log(err)
+            toast({
+                title: err.response.data.message,
+                position: "top",
+                isClosable: true,
+                status: "error",
+                duration: 5000
+            })
+        }
+    }
+
     return (
-        <div>
-            <form>
-                <div>
-                    <label htmlFor="title">Title</label> <br/>
-                    <input type="text" name={"title"} placeholder={"Input title..."} />
-                </div>
-                <div>
-                    <label htmlFor="todo">Todo</label> <br/>
-                    <input type="text" name={"todo"} placeholder={"Input todo..."} />
-                </div>
-                <button>Add</button>
-            </form>
-        </div>
+        <Box p={"4"} mb={"4"}>
+            <Container maxW={"container.sm"}>
+                <Box p={"4"}>
+                    <Card>
+                        <CardHeader>
+                            <Center>
+                                <Heading size='lg'>Add your todo</Heading>
+                            </Center>
+                        </CardHeader>
+
+                        <CardBody>
+
+                            <Box>
+                                <form onSubmit={handleSubmit(todoHandleSubmit)}>
+                                    <Stack spacing={"4"}>
+                                        <FormControl isInvalid={Boolean(errors.title)}>
+                                            <FormLabel htmlFor={"title"}>Title</FormLabel>
+                                            <Input type={"text"} id={"title"}
+                                                   placeholder={"input title"} {...register("title")} />
+                                        </FormControl>
+                                        <FormControl isInvalid={Boolean(errors.todo)}>
+                                            <FormLabel htmlFor={"todo"}>Todo</FormLabel>
+                                            <Textarea id={"todo"}
+                                                      placeholder={"enter your todo"} {...register("todo")} />
+                                        </FormControl>
+                                    </Stack>
+                                    <Button colorScheme={"teal"} mt={"4"} type={"submit"} isLoading={isSubmitting}>Add
+                                        todo</Button>
+                                </form>
+                            </Box>
+                        </CardBody>
+                    </Card>
+
+                </Box>
+            </Container>
+        </Box>
     )
 }
 
